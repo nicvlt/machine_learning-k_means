@@ -109,9 +109,6 @@ def K_means(df, K):
     #assign new centroids to each point
     updated_centroids(df, centroids)
     
-    #get intraclass inertia
-    compute_inertiaW(df, centroids)
-
     i=0
     loop = True
     while(loop):
