@@ -93,6 +93,14 @@ def add_to_plot(centroids, K):
     for i in range(1, K+1):
         plt.scatter(centroids['{}'.format(i)][0], centroids['{}'.format(i)][1], c='red', marker='X', alpha=0.3)
 
+def plot_k_means(df, K, centroids):
+    #plot each points with their cluster and the centroids of each cluster with X
+    plt.scatter(df[df.columns[0]], df[df.columns[1]], c=df['Cluster'])
+    for i in range(1, K+1):
+        plt.scatter(centroids['{}'.format(i)][0], centroids['{}'.format(i)][1], c='blue', marker='X', s=500, alpha=0.6)
+    plt.show()
+
+
 def K_means(df, K):
     #calculate new centroids
     centroids = init_centroids(K, df)
@@ -113,23 +121,23 @@ def K_means(df, K):
         if(check_loop == 1):
             loop = False
 
-    #plot each points with their cluster and the centroids of each cluster with X
-    plt.scatter(df[df.columns[0]], df[df.columns[1]], c=df['Cluster'])
-    for i in range(1, K+1):
-        plt.scatter(centroids['{}'.format(i)][0], centroids['{}'.format(i)][1], c='blue', marker='X', s=500, alpha=0.6)
-    plt.show()
+    #plot_k_means(df, K, centroids)
+    plot_k_means(df, K, centroids)
+
 
 def main():
     #initialise the dataset
     df = initialize_csv()
     K=3
 
+    #K_means algorithm
+    K_means(df, K)
+
     #TEST : pointless code to create a dataset with K clusters
     pointSet = sk.make_blobs(n_samples=100, n_features = 2, centers=K)
     temp = {'X' : pointSet[0][:,0], 'Y' : pointSet[0][:,1], 'Cluster' : pointSet[1]}
     dfB = pd.DataFrame(temp, columns=['X', 'Y', 'Cluster'])
+    
 
-    #K-means
-    K_means(df, K)
 
 main()
