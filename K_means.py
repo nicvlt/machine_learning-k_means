@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-import sklearn.datasets as sk
+import sklearn.datasets as skDatasets
+import sklearn.cluster as skCluster
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_moons
 
@@ -126,18 +127,29 @@ def K_means(df, K):
 
 
 def main():
+
     #initialise the dataset
     df = initialize_csv()
     K=3
 
-    #K_means algorithm
-    K_means(df, K)
+    print("Choose an action :\n")
+    usr_input = int(input("1. K-means algorithm\n2. K-means algorithm with scikit-learn\n3. Exit\n"))
 
-    #TEST : pointless code to create a dataset with K clusters
-    pointSet = sk.make_blobs(n_samples=100, n_features = 2, centers=K)
-    temp = {'X' : pointSet[0][:,0], 'Y' : pointSet[0][:,1], 'Cluster' : pointSet[1]}
-    dfB = pd.DataFrame(temp, columns=['X', 'Y', 'Cluster'])
+    if(usr_input == 1):
+        K_means(df, K)
+
+    elif(usr_input == 2):
+        pointSet = skDatasets.make_blobs(n_samples=100, n_features = 2, centers=K)
+        temp = {'X' : pointSet[0][:,0], 'Y' : pointSet[0][:,1], 'Cluster' : pointSet[1]}
+        dfB = pd.DataFrame(temp, columns=['X', 'Y', 'Cluster'])
+
+        KMeans = skCluster.KMeans(n_clusters = K).fit(dfB[['X', 'Y']])
+
+        plt.scatter(dfB['X'], dfB['Y'], c=dfB['Cluster'])
+        plt.scatter(KMeans.cluster_centers_[:,0], KMeans.cluster_centers_[:,1], c='red', marker='X', s=500, alpha=0.6)
+        plt.show()
     
-
+    elif(usr_input == 3):
+        exit()
 
 main()
