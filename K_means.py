@@ -133,7 +133,7 @@ def main():
     K=3
 
     print("Choose an action :\n")
-    usr_input = int(input("1. K-means algorithm\n2. K-means algorithm with scikit-learn\n3. Exit\n"))
+    usr_input = int(input("1. K-means algorithm from scratch\n2. K-means algorithm with scikit-learn\n3. K-means with make_blob\n4. K-means with make_moons\n5. Plot inertia Elbow Method\n10. Exit\n"))
 
     if(usr_input == 1):
         K_means(df, K)
@@ -150,6 +150,39 @@ def main():
         plt.show()
     
     elif(usr_input == 3):
+        X, y = skDatasets.make_blobs(n_samples=600, random_state=170)
+        rng=np.random.RandomState(74)
+        transformation=rng.normal(size=(2,2))
+        X=np.dot(X,transformation)
+
+        KMeans = skCluster.KMeans(n_clusters = K).fit(X)
+
+        plt.scatter(X[:,0], X[:,1], c=KMeans.labels_)
+        plt.scatter(KMeans.cluster_centers_[:,0], KMeans.cluster_centers_[:,1], c='red', marker='X', s=500, alpha=0.6)
+        plt.show()
+
+    elif(usr_input == 4):
+        X, y =make_moons(n_samples=200, noise=0.05,random_state=0)
+        KMeans = skCluster.KMeans(n_clusters = K).fit(X)
+
+        plt.scatter(X[:,0], X[:,1], c=KMeans.labels_)
+        plt.scatter(KMeans.cluster_centers_[:,0], KMeans.cluster_centers_[:,1], c='red', marker='X', s=500, alpha=0.6)
+        plt.show()
+
+    elif(usr_input == 5):
+        X, y =make_moons(n_samples=200, noise=0.05,random_state=0)
+        inertia = []
+        K = range(1,10)
+        for k in K:
+            KMeans = skCluster.KMeans(n_clusters = k).fit(X)
+            inertia.append(KMeans.inertia_)
+        plt.plot(K, inertia, 'bx-')
+        plt.xlabel('k')
+        plt.ylabel('Inertia')
+        plt.title('The Elbow Method showing the optimal k')
+        plt.show()
+
+    elif(usr_input == 10):
         exit()
 
 main()
